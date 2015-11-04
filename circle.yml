@@ -25,7 +25,7 @@ test:
   override:
     - docker-compose -f docker-compose.yml up -d
     # Run Behat tests
-    - docker-compose -f docker-compose.yml run cli bash -c 'cd test && composer install --prefer-source --no-interaction && vender/behat/behat/bin/behat -p docker --format=pretty --out=std --format=junit --out=junit'
+    - docker-compose -f docker-compose.yml run cli bash -c 'cd /var/www/test && composer install --prefer-source --no-interaction && vendor/behat/behat/bin/behat -p docker'
   post:
     # Copy JUnit tests for CircleCI to parse results.
     - cp -R tests/junit $CIRCLE_TEST_REPORTS
