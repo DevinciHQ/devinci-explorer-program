@@ -12,7 +12,16 @@ web:
   volumes:
     - ./src:/var/www/html
     - ./test:/var/www/test
-
+cli:
+  build: .
+  environment:
+    - ENVIRONMENT=docker
+    - VIRTUAL_HOST=explorer-test.docker
+  volumes:
+    - ./src:/var/www/html
+    - ./test:/var/www/test
+  links:
+    - browser
 # selenium2 node
 # Uncomment the service definition section below and the link in the web service above to start using selenium2 driver for Behat tests requiring JS support.
 browser:
