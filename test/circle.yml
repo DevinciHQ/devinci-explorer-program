@@ -1,0 +1,40 @@
+## General build settings
+#general:
+#  branches:
+#    only:
+#      - master # Only build master
+
+## Customize the test machine
+machine:
+  services:
+    - docker # Enable docker
+
+## Customize dependencies
+dependencies:
+  pre:
+    # Install docker-compose
+    - wget -q https://github.com/docker/compose/releases/download/1.1.0/docker-compose-`uname -s`-`uname -m` 
+    - sudo mv docker-compose-`uname -s`-`uname -m` /usr/local/bin/docker-compose 
+    - sudo chmod +x /usr/local/bin/docker-compose 
+    # Configure Git
+    - git config --global user.email "ci@circleci.com" && git config --global user.name "Circle CI"
+
+## Customize test commands
+test:
+  pre:
+  override:
+    - docker-compose -f docker-compose.yml up -d
+    # Run Behat tests
+    - docker-compose -f docker-compose.yml run cli bash -c 'cd test && composer install --prefer-source --no-interaction && vender/behat/behat/bin/behat -p docker --format=pretty --out=std --format=junit --out=junit'
+  post:
+    # Copy JUnit tests for CircleCI to parse results.
+    - cp -R tests/junit $CIRCLE_TEST_REPORTS
+    # Copy screenshots to artifacts folder to view
+    - cp -R tests/assets $CIRCLE_ARTIFACTS
+
+## Customize deployment commands
+#deployment:
+#  release:
+#    branch: master
+#    commands:
+#      - ./build.sh
