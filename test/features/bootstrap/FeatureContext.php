@@ -5,11 +5,12 @@ use Behat\Behat\Context\SnippetAcceptingContext;
 use Behat\Gherkin\Node\PyStringNode;
 use Behat\Gherkin\Node\TableNode;
 use Behat\MinkExtension\Context\MinkContext;
+use Drupal\DrupalExtension\Context\RawDrupalContext;
 
 /**
  * Defines application features from the specific context.
  */
-class FeatureContext extends MinkContext
+class FeatureContext extends RawDrupalContext implements SnippetAcceptingContext
 {
     /**
      * Initializes context.

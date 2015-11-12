@@ -18,12 +18,24 @@ commands:
   reset:
     cmd: "docker-compose stop && docker-compose rm && ahoy up"
     usage: Start the docker compose-containers.
+  drush:
+    cmd: "docker exec -it $(docker-compose ps -q cli) bash -c 'cd docroot/ && drush {{args}}'"
+    usage: run drush commands in the cli service container.
   bash:
     cmd: "docker-compose run {{args}} bash "
     usage: run drush commands in the cli service container.
+  mysql:
+    cmd: "docker exec -it $(docker-compose ps -q cli) bash -c 'mysql -u$DB_ENV_MYSQL_USER -p$DB_ENV_MYSQL_PASSWORD -h$DB_PORT_3306_TCP_ADDR $DB_ENV_MYSQL_DATABASE'"
+    usage: Connect to the default mysql database.
+  mysql-import:
+    cmd: "docker exec -i $(docker-compose ps -q cli) bash -c 'mysql -u$DB_ENV_MYSQL_USER -p$DB_ENV_MYSQL_PASSWORD -h$DB_PORT_3306_TCP_ADDR $DB_ENV_MYSQL_DATABASE'"
+    usage: Pipe in a sql file.  `ahoy mysql-import < backups/live.sql`
+  mysql-dump:
+    cmd: "docker exec -it $(docker-compose ps -q cli) bash -c 'mysqldump -u$DB_ENV_MYSQL_USER -p$DB_ENV_MYSQL_PASSWORD -h$DB_PORT_3306_TCP_ADDR $DB_ENV_MYSQL_DATABASE'"
+    usage: Dump data out into a file. `ahoy mysql-import > backups/local.sql`
   behat:
-    cmd: "docker exec -it $(docker-compose ps -q cli) bash -c 'cd /var/www/test && vendor/behat/behat/bin/behat -p docker {{args}}'"
+    cmd: "docker exec -it $(docker-compose ps -q cli) bash -c 'cd test && vendor/behat/behat/bin/behat -p docker {{args}}'"
     usage: Run the behat tests
   behat-init:
-    cmd: "docker exec -it $(docker-compose ps -q cli) bash -c 'cd /var/www/test && composer install'"
-    usage: Inititalize behat.
+    cmd: "docker exec -it $(docker-compose ps -q cli) bash -c 'cd test && composer install && composer update'"
+    usage: Run the behat tests

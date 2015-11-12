@@ -5,4 +5,4 @@ Feature: Starter
 
   Scenario:
     Given I am on the homepage
-    Then I should see "Working"
+    Then I should see "Site-Install"

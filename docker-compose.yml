@@ -3,25 +3,96 @@
 
 # Web node
 web:
-  build: .
+  hostname: web
+  image: blinkreaction/drupal-apache-php:2.2-5.5
   environment:
     - ENVIRONMENT=docker
     - VIRTUAL_HOST=explorer-test.docker
   ports:
     - "80"
+    - "443"
   volumes:
-    - ./src:/var/www/html
-    - ./test:/var/www/test
+    # PHP configuration overrides
+    - "./.docker/etc/php5/php.ini:/etc/php5/fpm/conf.d/z_php.ini"
+    # Project root folder mapping
+    - &project_root ".:/var/www"
+  links:
+    - db
+    - solr
+    - memcached
+
+# Web node
+#web:
+#  build: .
+#  environment:
+#    - ENVIRONMENT=docker
+#    - VIRTUAL_HOST=explorer-test.docker
+#  ports:
+#    - "80"
+#  volumes:
+#    - ./src:/var/www/html
+#    - ./test:/var/www/test
+
+# DB node
+db:
+  hostname: db
+  image: blinkreaction/mysql:5.5
+  ports:
+    - "3306"
+    # Use IP based mapping when working with multiple projects. See docs (^^) for more details.
+    #- 192.168.10.10:3306:3306
+  # DB configuration
+  environment:
+    - MYSQL_ROOT_PASSWORD=admin123
+    - MYSQL_USER=drupal
+    - MYSQL_PASSWORD=123
+    - MYSQL_DATABASE=drupal
+  volumes:
+     # MySQL configuration overrides
+     - "./.docker/etc/mysql/my.cnf:/etc/mysql/conf.d/z_my.cnf"
+     # Permanent DB data storage
+     - /var/lib/mysql
+
 cli:
-  build: .
+  hostname: cli
+  image: devinci/drupal-cli
   environment:
     - ENVIRONMENT=docker
     - VIRTUAL_HOST=explorer-test.docker
   volumes:
-    - ./src:/var/www/html
-    - ./test:/var/www/test
+    # PHP configuration overrides
+    - "./.docker/etc/php5/php-cli.ini:/etc/php5/cli/conf.d/z_php.ini"
+    # Project root folder mapping
+    - *project_root
+    # Host SSH keys mapping. Uncomment one of the lines below based on your setup.
+    - /.ssh:/.ssh   # boot2docker-vagrant
+    #- ~/.ssh:/.ssh  # Linux
   links:
+    - db
+    - web
+    # Uncomment this and the browser service definition below to start using selenium2.
     - browser
+    - solr
+    - memcached
+
+#cli:
+#  build: .
+#  environment:
+#    - ENVIRONMENT=docker
+#    - VIRTUAL_HOST=explorer-test.docker
+#  volumes:
+#    - ./src:/var/www/html
+#    - ./test:/var/www/test
+#  links:
+#    - browser
+
+memcached:
+  hostname: memcached
+  image: memcached
+  environment:
+    # Memcached memory limit in megabytes
+    - MEMCACHED_MEMORY_LIMIT=128
+
 # selenium2 node
 # Uncomment the service definition section below and the link in the web service above to start using selenium2 driver for Behat tests requiring JS support.
 browser:
@@ -34,3 +105,11 @@ browser:
     - web
   ports:
     - "4444"
+
+solr:
+  hostname: solr
+  image: devinci/drupal-solr:3.x
+  ports:
+    - "8983"
+  volumes:
+    - "./.docker/etc/solr/3.x:/var/lib/solr/conf"
