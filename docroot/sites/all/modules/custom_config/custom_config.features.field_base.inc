@@ -111,6 +111,46 @@ function custom_config_field_default_field_bases() {
     'type' => 'entityreference',
   );
 
+  // Exported field_base: 'field_directors_movies'.
+  $field_bases['field_directors_movies'] = array(
+    'active' => 1,
+    'cardinality' => -1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_directors_movies',
+    'indexes' => array(
+      'target_id' => array(
+        0 => 'target_id',
+      ),
+    ),
+    'locked' => 0,
+    'module' => 'entityreference',
+    'settings' => array(
+      'handler' => 'base',
+      'handler_settings' => array(
+        'behaviors' => array(
+          'test_field_behavior' => array(
+            'status' => 0,
+          ),
+          'views-select-list' => array(
+            'status' => 0,
+          ),
+        ),
+        'sort' => array(
+          'direction' => 'ASC',
+          'property' => 'title',
+          'type' => 'property',
+        ),
+        'target_bundles' => array(
+          'movies' => 'movies',
+        ),
+      ),
+      'target_type' => 'node',
+    ),
+    'translatable' => 0,
+    'type' => 'entityreference',
+  );
+
   // Exported field_base: 'field_image'.
   $field_bases['field_image'] = array(
     'active' => 1,
@@ -133,61 +173,66 @@ function custom_config_field_default_field_bases() {
     'type' => 'image',
   );
 
-  // Exported field_base: 'field_list_movies'.
-  $field_bases['field_list_movies'] = array(
+  // Exported field_base: 'field_movies_image'.
+  $field_bases['field_movies_image'] = array(
     'active' => 1,
     'cardinality' => 1,
     'deleted' => 0,
     'entity_types' => array(),
-    'field_name' => 'field_list_movies',
+    'field_name' => 'field_movies_image',
     'indexes' => array(
-      'format' => array(
-        0 => 'format',
+      'fid' => array(
+        0 => 'fid',
       ),
     ),
     'locked' => 0,
-    'module' => 'text',
-    'settings' => array(),
+    'module' => 'image',
+    'settings' => array(
+      'default_image' => 0,
+      'uri_scheme' => 'public',
+    ),
     'translatable' => 0,
-    'type' => 'text_with_summary',
+    'type' => 'image',
   );
 
-  // Exported field_base: 'field_list_stars'.
-  $field_bases['field_list_stars'] = array(
+  // Exported field_base: 'field_stars_movies'.
+  $field_bases['field_stars_movies'] = array(
     'active' => 1,
-    'cardinality' => 1,
+    'cardinality' => -1,
     'deleted' => 0,
     'entity_types' => array(),
-    'field_name' => 'field_list_stars',
+    'field_name' => 'field_stars_movies',
     'indexes' => array(
-      'format' => array(
-        0 => 'format',
+      'target_id' => array(
+        0 => 'target_id',
       ),
     ),
     'locked' => 0,
-    'module' => 'text',
-    'settings' => array(),
-    'translatable' => 0,
-    'type' => 'text_with_summary',
-  );
-
-  // Exported field_base: 'field_movies'.
-  $field_bases['field_movies'] = array(
-    'active' => 1,
-    'cardinality' => 1,
-    'deleted' => 0,
-    'entity_types' => array(),
-    'field_name' => 'field_movies',
-    'indexes' => array(
-      'format' => array(
-        0 => 'format',
+    'module' => 'entityreference',
+    'settings' => array(
+      'handler' => 'base',
+      'handler_settings' => array(
+        'behaviors' => array(
+          'test_field_behavior' => array(
+            'status' => 0,
+          ),
+          'views-select-list' => array(
+            'status' => 0,
+          ),
+        ),
+        'sort' => array(
+          'direction' => 'ASC',
+          'property' => 'title',
+          'type' => 'property',
+        ),
+        'target_bundles' => array(
+          'movies' => 'movies',
+        ),
       ),
+      'target_type' => 'node',
     ),
-    'locked' => 0,
-    'module' => 'text',
-    'settings' => array(),
     'translatable' => 0,
-    'type' => 'text_with_summary',
+    'type' => 'entityreference',
   );
 
   // Exported field_base: 'field_tags'.
@@ -216,51 +261,54 @@ function custom_config_field_default_field_bases() {
     'type' => 'taxonomy_term_reference',
   );
 
-  // Exported field_base: 'field_works'.
-  $field_bases['field_works'] = array(
-    'active' => 1,
-    'cardinality' => 1,
-    'deleted' => 0,
-    'entity_types' => array(),
-    'field_name' => 'field_works',
-    'indexes' => array(
-      'format' => array(
-        0 => 'format',
-      ),
-    ),
-    'locked' => 0,
-    'module' => 'text',
-    'settings' => array(),
-    'translatable' => 0,
-    'type' => 'text_with_summary',
-  );
-
-  // Exported field_base: 'field_writer_movies'.
-  $field_bases['field_writer_movies'] = array(
-    'active' => 1,
-    'cardinality' => 1,
-    'deleted' => 0,
-    'entity_types' => array(),
-    'field_name' => 'field_writer_movies',
-    'indexes' => array(
-      'format' => array(
-        0 => 'format',
-      ),
-    ),
-    'locked' => 0,
-    'module' => 'text',
-    'settings' => array(),
-    'translatable' => 0,
-    'type' => 'text_with_summary',
-  );
-
   // Exported field_base: 'field_writers'.
   $field_bases['field_writers'] = array(
     'active' => 1,
-    'cardinality' => 1,
+    'cardinality' => -1,
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_writers',
+    'indexes' => array(
+      'target_id' => array(
+        0 => 'target_id',
+      ),
+    ),
+    'locked' => 0,
+    'module' => 'entityreference',
+    'settings' => array(
+      'handler' => 'base',
+      'handler_settings' => array(
+        'behaviors' => array(
+          'test_field_behavior' => array(
+            'status' => 0,
+          ),
+          'views-select-list' => array(
+            'status' => 0,
+          ),
+        ),
+        'sort' => array(
+          'direction' => 'ASC',
+          'property' => 'title',
+          'type' => 'property',
+        ),
+        'target_bundles' => array(
+          'director' => 'director',
+          'writer' => 'writer',
+        ),
+      ),
+      'target_type' => 'node',
+    ),
+    'translatable' => 0,
+    'type' => 'entityreference',
+  );
+
+  // Exported field_base: 'field_writers_movies'.
+  $field_bases['field_writers_movies'] = array(
+    'active' => 1,
+    'cardinality' => -1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_writers_movies',
     'indexes' => array(
       'target_id' => array(
         0 => 'target_id',

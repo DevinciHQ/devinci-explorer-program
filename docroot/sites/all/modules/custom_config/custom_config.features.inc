@@ -48,14 +48,6 @@ function custom_config_node_info() {
       'title_label' => t('Title'),
       'help' => '',
     ),
-    'movies_list' => array(
-      'name' => t('Movies List'),
-      'base' => 'node_content',
-      'description' => '',
-      'has_title' => '1',
-      'title_label' => t('Title'),
-      'help' => '',
-    ),
     'page' => array(
       'name' => t('Basic page'),
       'base' => 'node_content',
@@ -70,14 +62,6 @@ function custom_config_node_info() {
       'description' => t('A short description of an actor or actress and their body of work.'),
       'has_title' => '1',
       'title_label' => t('Name'),
-      'help' => '',
-    ),
-    'stars_list' => array(
-      'name' => t('Stars List'),
-      'base' => 'node_content',
-      'description' => '',
-      'has_title' => '1',
-      'title_label' => t('Title'),
       'help' => '',
     ),
     'writer' => array(
