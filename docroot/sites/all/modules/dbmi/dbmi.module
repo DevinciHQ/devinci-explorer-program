@@ -26,23 +26,61 @@ include_once 'dbmi.features.inc';
 
 function dbmi_menu() {
 
-    $aItems = array(
-        'dbmi' => array(
-            'title' => 'dbmi',
-            'page callback' => '_page_dbmi',
+    $aItems = array();
+        $aItems['dbmi/movie/add'] = array(
+            'title' => 'Add Movies',
+            'page callback' => 'drupal_get_form',
+            'page arguments' => array('form_example'),
             'access callback' => TRUE,
-        ),
-    );
+        );
     return $aItems;
 }
 
 /**
- * Page callback mapped to the url /hello_world
+ * Page callback mapped to the url /dbmi/movie/add
  *
  * @return array
  */
 function _page_dbmi() {
     return array(
-        '#markup' => '<p>DBMI</p>'
+        '#markup' => '<p>Add Movie</p>
+                      <p> There will be a form here</p>'
     );
+}
+
+function form_example($form, &$form_state) {
+
+    $form['movie'] = array(
+        '#type' => 'fieldset',
+        '#title' => t('Movie'),
+        '#collapsible' => TRUE,
+        '#collapsed' => FALSE,
+    );
+    $form['movie']['title'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Title'),
+        '#required' => TRUE,
+        '#default_value' => "Title",
+        '#description' => "Please enter the movie title.",
+    );
+    $form['movie']['year'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Year'),
+        '#required' => TRUE,
+        '#default_value' => "Year",
+        '#description' => "Please enter the year the movie was released",
+    );
+
+    $form['submit'] = array(
+        '#type' => 'submit',
+        '#value' => 'SEARCH',
+    );
+    return $form;
+
+}
+
+function form_example_submit($form_id, &$form_state) {
+    $form_state['redirect'] = array( 'http://www.omdbapi.com/?t='.
+        $form_state['values']['title'].'&y='.$form_state['values']['year']."&plot=short&r=json",
+);
 }
