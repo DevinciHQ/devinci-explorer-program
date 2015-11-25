@@ -1,0 +1,48 @@
+<?php
+/**
+ * @file
+ * Code for the custom config feature.
+ */
+
+/**
+ * Implements hook_help().
+ *
+ * Displays help and module information.
+ *
+ * @param path
+ *   Which path of the site we're using to display help
+ * @param arg
+ *   Array that holds the current path as returned from arg() function
+ */
+function dbmi_help($path, $arg) {
+    switch ($path) {
+        case "admin/help#dbmi":
+            return '<p>' . t("TBD") . '</p>';
+            break;
+    }
+}
+
+include_once 'dbmi.features.inc';
+
+function dbmi_menu() {
+
+    $aItems = array(
+        'dbmi' => array(
+            'title' => 'dbmi',
+            'page callback' => '_page_dbmi',
+            'access callback' => TRUE,
+        ),
+    );
+    return $aItems;
+}
+
+/**
+ * Page callback mapped to the url /hello_world
+ *
+ * @return array
+ */
+function _page_dbmi() {
+    return array(
+        '#markup' => '<p>DBMI</p>'
+    );
+}
