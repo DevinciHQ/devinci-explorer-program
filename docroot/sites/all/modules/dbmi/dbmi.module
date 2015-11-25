@@ -30,7 +30,12 @@ function dbmi_menu() {
         $aItems['dbmi/movie/add'] = array(
             'title' => 'Add Movies',
             'page callback' => 'drupal_get_form',
-            'page arguments' => array('form_example'),
+            'page arguments' => array('dbmi_add_movie_form'),
+            'access callback' => TRUE,
+        );
+        $aItems['dbmi/movie/results'] = array(
+            'title' => 'Results',
+            'page callback' => '_page_results',
             'access callback' => TRUE,
         );
     return $aItems;
@@ -43,12 +48,11 @@ function dbmi_menu() {
  */
 function _page_dbmi() {
     return array(
-        '#markup' => '<p>Add Movie</p>
-                      <p> There will be a form here</p>'
+        '#markup' => '<p>Add Movie</p>'
     );
 }
 
-function form_example($form, &$form_state) {
+function dbmi_add_movie_form($form, &$form_state) {
 
     $form['movie'] = array(
         '#type' => 'fieldset',
@@ -79,8 +83,75 @@ function form_example($form, &$form_state) {
 
 }
 
-function form_example_submit($form_id, &$form_state) {
-    $form_state['redirect'] = array( 'http://www.omdbapi.com/?t='.
+function dbmi_add_movie_form_submit($form_id, &$form_state) {
+    /*$form_state['redirect'] = array( 'http://www.omdbapi.com/?t='.
         $form_state['values']['title'].'&y='.$form_state['values']['year']."&plot=short&r=json",
 );
+    return array(
+        '#markup' => '<p>Add Movie</p>
+                      <p> There will be a form here</p>'
+    );
+    /*$build = array();
+    $build['table'] = array(
+        '#theme' => 'table',
+        '#header' => $form_state['values']['title'],
+        '#rows' => 4,
+        );
+    $build['pager'] = array(
+        '#theme' => 'pager',
+        );
+    return $build;
+    $name = $form_state['values']['year'];
+    drupal_set_message(t('Thanks for filling out the form, %name',
+        array('%name' => $name)));
+
+    $items = array();
+    $items['dbmi/movie/results'] = array(
+        'title' => 'Results',
+        'page callback' => '_page_results',
+        'access callback' => TRUE,
+    );
+
+    return $items;*/
+
+    $form_state['redirect'] = 'dbmi/movie/results';
+
+
+
+}
+
+function _page_results(){
+    /*$headers = array('H1','H2','H3');
+    $rows = array(array('c11','c12','c2'),array('c21','c22','c23'),array('c31','c32','c33'));
+    $variables = array($headers,$rows);
+    return theme_table($variables);
+    return array(
+        '#markup' => '<p>Results</p>'
+    );*/
+    $headers = array(
+        array('data' => 'First_Name', 'field' => 'First_Name'),
+        array('data' => 'Last_Name', 'field' => 'Last_Name'),
+    );
+
+
+    $rows = array(
+        array('field' => 'First_Guy', 'data' => array('John','Wayne')),
+        array('field' => 'Second_Guy', 'data' => array('Chuck','Berry')),
+        array('field' => 'Third_Guy', 'data' => array('Rick','James'))
+    );
+
+
+    $table_data = array(
+        'header'     => $headers,
+        'rows'       => $rows,
+        'sticky'     => FALSE,
+        'empty'      => 'No results found',
+        'attributes' => array(),
+        'caption'    => '',
+        'colgroups'  => array()
+    );
+
+
+    $output = theme_table($table_data);
+    return $output;
 }
