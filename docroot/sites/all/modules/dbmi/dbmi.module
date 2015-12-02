@@ -1,40 +1,5 @@
 <?php
-/**
- * @file
- * Code for the custom config feature.
- */
 
-/**
- * Implements hook_help().
- *
- * Displays help and module information.
- *
- * @param path
- *   Which path of the site we're using to display help
- * @param arg
- *   Array that holds the current path as returned from arg() function
- */
-function dbmi_help($path, $arg) {
-    switch ($path) {
-        case "admin/help#dbmi":
-            return '<p>' . t("TBD") . '</p>';
-            break;
-    }
-}
-
-include_once 'dbmi.features.inc';
-
-/**
- * Implements hook_help().
- *
- * Runs on every page.
- */
-
-function dbmi_init() {
-    global $user;
-    //kpr($user);
-
-}
 
 function dbmi_menu() {
 
@@ -45,23 +10,13 @@ function dbmi_menu() {
             'page arguments' => array('dbmi_add_movie_form'),
             'access callback' => TRUE,
         );
-        $aItems['dbmi/movie/results'] = array(
+        $aItems['dbmi/movie/results/%'] = array(
             'title' => 'Results',
             'page callback' => '_page_results',
+            'page arguments' => array(3),
             'access callback' => TRUE,
         );
     return $aItems;
-}
-
-/**
- * Page callback mapped to the url /dbmi/movie/add
- *
- * @return array
- */
-function _page_dbmi() {
-    return array(
-        '#markup' => '<p>Add Movie</p>'
-    );
 }
 
 function dbmi_add_movie_form($form, &$form_state) {
@@ -96,70 +51,40 @@ function dbmi_add_movie_form($form, &$form_state) {
 }
 
 function dbmi_add_movie_form_submit($form_id, &$form_state) {
-    /*$form_state['redirect'] = array( 'http://www.omdbapi.com/?t='.
-        $form_state['values']['title'].'&y='.$form_state['values']['year']."&plot=short&r=json",
-);
-    return array(
-        '#markup' => '<p>Add Movie</p>
-                      <p> There will be a form here</p>'
-    );
-    /*$build = array();
-    $build['table'] = array(
-        '#theme' => 'table',
-        '#header' => $form_state['values']['title'],
-        '#rows' => 4,
-        );
-    $build['pager'] = array(
-        '#theme' => 'pager',
-        );
-    return $build;
-    $name = $form_state['values']['year'];
-    drupal_set_message(t('Thanks for filling out the form, %name',
-        array('%name' => $name)));
-
-    $items = array();
-    $items['dbmi/movie/results'] = array(
-        'title' => 'Results',
-        'page callback' => '_page_results',
-        'access callback' => TRUE,
-    );
-
-    return $items;*/
-
-    $form_state['redirect'] = 'dbmi/movie/results';
-
+    $result = drupal_http_request('http://www.omdbapi.com/?t='.
+        $form_state['values']['title'].'&y='.$form_state['values']['year']."&plot=short&r=json");
+    $form_state['redirect'] = 'dbmi/movie/results/'.$result->data;
 
 
 }
 
-function _page_results(){
-    /*$headers = array('H1','H2','H3');
-    $rows = array(array('c11','c12','c2'),array('c21','c22','c23'),array('c31','c32','c33'));
-    $variables = array($headers,$rows);
-    return theme_table($variables);
-    return array(
-        '#markup' => '<p>Results</p>'
-    );*/
+function _page_results($raw){
+    $split = explode('"',$raw);
+    $title = $split[3];
+    $rated = $split[11];
+    $runtime = $split[19];
+    $genre = $split[23];
+
     $headers = array(
-        array('data' => 'First_Name', 'field' => 'First_Name'),
-        array('data' => 'Last_Name', 'field' => 'Last_Name'),
+        array('data' => 'Title', 'field' => 'Title'),
+        array('data' => 'Rated', 'field' => 'Rated'),
     );
 
 
     $rows = array(
-        array('field' => 'First_Guy', 'data' => array('John','Wayne')),
-        array('field' => 'Second_Guy', 'data' => array('Chuck','Berry')),
-        array('field' => 'Third_Guy', 'data' => array('Rick','James'))
+        array('field' => 'First_Guy', 'data' => array(array('header'=>TRUE,'data' =>'Rated'),$rated)),
+        array('field' => 'Second_Guy', 'data' => array(array('header'=>TRUE,'data' =>'Runtime'),$runtime)),
+        array('field' => 'Third_Guy', 'data' => array(array('header'=>TRUE,'data' =>'Genre'),$genre))
     );
 
 
     $table_data = array(
-        'header'     => $headers,
+        'header'     => array(),
         'rows'       => $rows,
         'sticky'     => FALSE,
         'empty'      => 'No results found',
         'attributes' => array(),
-        'caption'    => '',
+        'caption'    => $title,
         'colgroups'  => array()
     );
 
