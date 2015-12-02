@@ -30,7 +30,7 @@ test:
     - docker-compose -f docker-compose.yml run cli bash -c 'cd /var/www/test && composer install --prefer-source --no-interaction && vendor/behat/behat/bin/behat -p docker'
   post:
     # Copy JUnit tests for CircleCI to parse results.
-    - cp -R tests/junit $CIRCLE_TEST_REPORTS
+    - cp -R test/junit $CIRCLE_TEST_REPORTS
     # Copy screenshots to artifacts folder to view
    # - cp -R tests/assets $CIRCLE_ARTIFACTS
 
