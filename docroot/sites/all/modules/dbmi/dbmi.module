@@ -1,0 +1,94 @@
+<?php
+
+
+function dbmi_menu() {
+
+    $aItems = array();
+        $aItems['dbmi/movie/add'] = array(
+            'title' => 'Add Movies',
+            'page callback' => 'drupal_get_form',
+            'page arguments' => array('dbmi_add_movie_form'),
+            'access callback' => TRUE,
+        );
+        $aItems['dbmi/movie/results/%'] = array(
+            'title' => 'Results',
+            'page callback' => '_page_results',
+            'page arguments' => array(3),
+            'access callback' => TRUE,
+        );
+    return $aItems;
+}
+
+function dbmi_add_movie_form($form, &$form_state) {
+
+    $form['movie'] = array(
+        '#type' => 'fieldset',
+        '#title' => t('Movie'),
+        '#collapsible' => TRUE,
+        '#collapsed' => FALSE,
+    );
+    $form['movie']['title'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Title'),
+        '#required' => TRUE,
+        '#default_value' => "Title",
+        '#description' => "Please enter the movie title.",
+    );
+    $form['movie']['year'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Year'),
+        '#required' => TRUE,
+        '#default_value' => "Year",
+        '#description' => "Please enter the year the movie was released",
+    );
+
+    $form['submit'] = array(
+        '#type' => 'submit',
+        '#value' => 'SEARCH',
+    );
+    return $form;
+
+}
+
+function dbmi_add_movie_form_submit($form_id, &$form_state) {
+    $result = drupal_http_request('http://www.omdbapi.com/?t='.
+        $form_state['values']['title'].'&y='.$form_state['values']['year']."&plot=short&r=json");
+    $form_state['redirect'] = 'dbmi/movie/results/'.$result->data;
+
+
+}
+
+function _page_results($raw){
+    $split = explode('"',$raw);
+    $title = $split[3];
+    $rated = $split[11];
+    $runtime = $split[19];
+    $genre = $split[23];
+
+    $headers = array(
+        array('data' => 'Title', 'field' => 'Title'),
+        array('data' => 'Rated', 'field' => 'Rated'),
+    );
+
+
+    $rows = array(
+        array('field' => 'First_Guy', 'data' => array(array('header'=>TRUE,'data' =>'Rated'),$rated)),
+        array('field' => 'Second_Guy', 'data' => array(array('header'=>TRUE,'data' =>'Runtime'),$runtime)),
+        array('field' => 'Third_Guy', 'data' => array(array('header'=>TRUE,'data' =>'Genre'),$genre))
+    );
+
+
+    $table_data = array(
+        'header'     => array(),
+        'rows'       => $rows,
+        'sticky'     => FALSE,
+        'empty'      => 'No results found',
+        'attributes' => array(),
+        'caption'    => $title,
+        'colgroups'  => array()
+    );
+
+
+    $output = theme_table($table_data);
+    return $output;
+}

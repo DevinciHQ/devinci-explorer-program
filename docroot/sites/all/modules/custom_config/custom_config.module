@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the custom config feature.
+ */
+
+include_once 'custom_config.features.inc';
