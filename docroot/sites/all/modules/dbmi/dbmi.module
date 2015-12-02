@@ -24,6 +24,18 @@ function dbmi_help($path, $arg) {
 
 include_once 'dbmi.features.inc';
 
+/**
+ * Implements hook_help().
+ *
+ * Runs on every page.
+ */
+
+function dbmi_init() {
+    global $user;
+    //kpr($user);
+
+}
+
 function dbmi_menu() {
 
     $aItems = array();
