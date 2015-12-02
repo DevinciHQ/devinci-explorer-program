@@ -1,0 +1,15 @@
+<?php
+
+function form_fun_menu(){
+    $items = array();
+    $items['form_fun/cake']= array(
+        'title' => 'Cake of Pie?',
+        'page callback' => 'form_fun_cake_page',
+        'access arguments' => array('access content'),
+        'file' => 'form_fun.cake.inc',
+        'weight' => 1,
+    );
+    return $items;
+
+
+}
