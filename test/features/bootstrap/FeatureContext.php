@@ -21,4 +21,20 @@ class FeatureContext extends MinkContext
     public function __construct()
     {
     }
+
+      // call currentDate() to fetch and format the date (month year)
+    public function getCurrentDate() {
+        return $this->currentdate = $this->currentDate()->format('D F Y');
+    }
+
+// Get current date time
+    protected function currentDate() {
+        return new DateTime();
+    }
+
+// date matcher does not take any arguments
+    public function MonthYearDateMatcher()
+    {
+        $this->assertSession()->pageTextContains($this->fixStepArgument($this->getCurrentDate()));
+    }
 }
